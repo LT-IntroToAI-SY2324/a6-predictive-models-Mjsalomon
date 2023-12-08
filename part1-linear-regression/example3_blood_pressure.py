@@ -1,26 +1,51 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
-'''
-Run the program and consider the following questions:
-1. Look at the data points on the graph. Do age and blood pressure appear to have a linear relationship?
-2. What does the value of r tell you about the relationship between age and blood pressure?
-'''
+from sklearn.linear_model import LinearRegression
 
 data = pd.read_csv("part1-linear-regression/blood_pressure_data.csv")
-x = data["Age"]
-y = data["Blood Pressure"]
+x = data["Age"].values
+y = data["Blood Pressure"].values
 
-#sets the size of the graph
-plt.figure(figsize=(5,4))
+# Use reshape to turn the x values into 2D arrays:
+x = x.reshape(-1,1)
 
-#labels axes and creates scatterplot
+# Create the model
+model = LinearRegression().fit(x, y)
+
+# Find the coefficient, bias, and r squared values. 
+# Each should be a float and rounded to two decimal places. 
+coef = round(float(model.coef_), 2)
+intercept = round(float(model.intercept_), 2)
+r_squared = model.score(x, y)
+
+# Print out the linear equation and r squared value
+print(f"Model's Linear Equation: y = {coef}x + {intercept}")
+print(f"R Squared value: {r_squared}")
+
+# Predict the the blood pressure of someone who is 43 years old.
+# Print out the prediction
+x_predict = 56
+prediction = model.predict([[x_predict]])
+print(f"Prediction when x is {x_predict}: {prediction}")
+
+# Create the model in matplotlib and include the line of best fit
+
+plt.figure(figsize=(6,4))
+
+# creates a scatter plot and labels the axes
+plt.scatter(x, y, c="purple")
+plt.scatter(x_predict, prediction, c="blue")
+
 plt.xlabel("Age")
-plt.ylabel("Systolic Blood Pressure")
-plt.title("Systolic Blood Pressure by Age")
-plt.scatter(x, y)
+plt.ylabel("Blood Pressure")
+plt.title("Blood Pressure vs Age")
 
-print("Pearson's Correlation: r = :", x.corr(y))
+# prints the correlation coefficient
+# print(f"Correlation between Blood Pressure and Age: {x.corr(y)}")
 
+# show the plot
+plt.plot(x, coef*x + intercept, c="r", label="Line of Best Fit")
+
+plt.legend()
 plt.show()
