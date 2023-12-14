@@ -59,3 +59,4 @@ y_pred=int(model.predict([[34,5600,1 ]]))
 
 print("Predicted Purchased:" ,y_pred ,"Purchased:" , actual)
 print("")
+
